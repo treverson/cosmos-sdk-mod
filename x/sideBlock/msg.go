@@ -18,6 +18,8 @@ var _ sdk.Msg = &MsgSideBlock{}
 type MsgSideBlock struct {
 	// TODO variable as we dont know who will call this
 	VariableAddress sdk.Address `json:"address"` // address of the validator owner
+	//  TODO we can add multiple block details here , starting with string here
+	blockHash	string	`json:"block_hash"`
 }
 
 func NewMsgSideBlock(variableAddr sdk.Address) MsgSideBlock {
