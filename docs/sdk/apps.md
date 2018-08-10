@@ -1,6 +1,6 @@
 # Apps in the SDK
 
-The SDK has multiple levels of "application": the ABCI app, the BaseApp, the BasecoinApp, and now your App.
+The SDK has multiple levels of "application": the ABCI app, the BaseApp, the maticApp, and now your App.
 
 ## ABCI App
 

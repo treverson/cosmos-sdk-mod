@@ -94,7 +94,7 @@ In the Cosmos SDK, you can see the application of this principle in the basecoin
     	"github.com/cosmos/cosmos-sdk/x/sketchy"
     )
     
-    func (app *BasecoinApp) initRouterHandlers() {
+    func (app *maticApp) initRouterHandlers() {
     
     	// All handlers must be added here.
     	// The order matters.

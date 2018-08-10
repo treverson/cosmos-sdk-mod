@@ -6,7 +6,7 @@ import (
 	cmn "github.com/tendermint/tmlibs/common"
 )
 
-// RunForever - BasecoinApp execution and cleanup
+// RunForever - maticApp execution and cleanup
 func RunForever(app abci.Application) {
 
 	// Start the ABCI server

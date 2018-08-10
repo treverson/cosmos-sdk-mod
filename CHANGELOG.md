@@ -226,7 +226,7 @@ BREAKING CHANGES
 
 * Remove go-wire, use go-amino
 * [store] Add `SubspaceIterator` and `ReverseSubspaceIterator` to `KVStore` interface
-* [basecoin] NewBasecoinApp takes a `dbm.DB` and uses namespaced DBs for substores
+* [basecoin] NewmaticApp takes a `dbm.DB` and uses namespaced DBs for substores
 
 FEATURES:
 
@@ -279,7 +279,7 @@ BUG FIXES
 BREAKING CHANGES
 
 * [basecoin] Remove cool/sketchy modules -> moved to new `democoin`
-* [basecoin] NewBasecoinApp takes a `map[string]dbm.DB` as temporary measure
+* [basecoin] NewmaticApp takes a `map[string]dbm.DB` as temporary measure
   to allow mounting multiple stores with their own DB until they can share one
 * [x/staking] Renamed to `simplestake`
 * [builder] Functions don't take `passphrase` as argument
