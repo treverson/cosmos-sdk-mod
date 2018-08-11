@@ -36,5 +36,5 @@ func (k Keeper) addBlock(ctx sdk.Context,blockHash string)  {
 	// TODO replace the second param with block struct and first will remain block hash
 	// we are using block hash as the key here !
 	store.Set([]byte(blockHash),[]byte(blockHash))
-	logger.Info("oh okay so that logs so work, ctx is %s", ctx)
+	logger.Info("oh okay so the logs so work, ctx is %s", ctx)
 }

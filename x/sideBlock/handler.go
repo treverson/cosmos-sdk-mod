@@ -21,12 +21,18 @@ func handleMsgSideBlock(ctx sdk.Context, msg MsgSideBlock, k Keeper) sdk.Result 
 	// TODO make web3 call using block hash , validate data here and return true in tags if true
 	blockHash := k.getBlock(ctx,msg.blockHash)
 	if bytes.Equal(blockHash,blockHash){
+		tags := sdk.NewTags("action", []byte("SideBlock"), "SideBlock", msg.blockHash)
 		return sdk.Result{
 			// TODO return block data here
+			Tags:tags,
 		}
 	} else {
-		// TODO return error here 
-		return sdk.Result{}
+		tags := sdk.NewTags("action", []byte("SideBlock"), "Error occured ", msg.blockHash)
+
+		// TODO return error here
+		return sdk.Result{
+			Tags:tags,
+		}
 	}
 
 }
