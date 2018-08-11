@@ -2,6 +2,7 @@ package sideBlock
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"bytes"
 )
 
 func NewHandler(k Keeper) sdk.Handler {
@@ -17,9 +18,15 @@ func NewHandler(k Keeper) sdk.Handler {
 }
 
 func handleMsgSideBlock(ctx sdk.Context, msg MsgSideBlock, k Keeper) sdk.Result {
-
-
-	return sdk.Result{
-
+	// TODO make web3 call using block hash , validate data here and return true in tags if true
+	blockHash := k.getBlock(ctx,msg.blockHash)
+	if bytes.Equal(blockHash,blockHash){
+		return sdk.Result{
+			// TODO return block data here
+		}
+	} else {
+		// TODO return error here 
+		return sdk.Result{}
 	}
+
 }
