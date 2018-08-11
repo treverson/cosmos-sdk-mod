@@ -37,10 +37,10 @@ func main() {
 }
 
 func newApp(logger log.Logger, db dbm.DB) abci.Application {
-	return app.NewmaticApp(logger, db)
+	return app.NewBasecoinApp(logger, db)
 }
 
 func exportAppStateAndTMValidators(logger log.Logger, db dbm.DB) (json.RawMessage, []tmtypes.GenesisValidator, error) {
-	bapp := app.NewmaticApp(logger, db)
+	bapp := app.NewBasecoinApp(logger, db)
 	return bapp.ExportAppStateAndValidators()
 }

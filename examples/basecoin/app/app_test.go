@@ -19,7 +19,7 @@ import (
 	"github.com/tendermint/tmlibs/log"
 )
 
-func setGenesis(bapp *maticApp, accs ...auth.BaseAccount) error {
+func setGenesis(bapp *BasecoinApp, accs ...auth.BaseAccount) error {
 	genaccs := make([]*types.GenesisAccount, len(accs))
 	for i, acc := range accs {
 		genaccs[i] = types.NewGenesisAccount(&types.AppAccount{acc, "foobart"})
@@ -48,7 +48,7 @@ func setGenesis(bapp *maticApp, accs ...auth.BaseAccount) error {
 func TestGenesis(t *testing.T) {
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout)).With("module", "sdk/app")
 	db := dbm.NewMemDB()
-	bapp := NewmaticApp(logger, db)
+	bapp := NewBasecoinApp(logger, db)
 
 	// Construct some genesis bytes to reflect basecoin/types/AppAccount
 	pk := crypto.GenPrivKeyEd25519().PubKey()
@@ -70,7 +70,7 @@ func TestGenesis(t *testing.T) {
 	assert.Equal(t, acc, res1)
 
 	// reload app and ensure the account is still there
-	bapp = NewmaticApp(logger, db)
+	bapp = NewBasecoinApp(logger, db)
 	ctx = bapp.BaseApp.NewContext(true, abci.Header{})
 	res1 = bapp.accountMapper.GetAccount(ctx, baseAcc.Address)
 	assert.Equal(t, acc, res1)
