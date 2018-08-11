@@ -15,10 +15,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/ibc"
-	"github.com/cosmos/cosmos-sdk/x/slashing"
-	"github.com/cosmos/cosmos-sdk/x/stake"
-
 	"github.com/cosmos/cosmos-sdk/examples/basecoin/types"
+	"github.com/cosmos/cosmos-sdk/x/sideBlock"
 )
 
 const (
@@ -36,6 +34,7 @@ type maticApp struct {
 	keyIBC      *sdk.KVStoreKey
 	//keyStake    *sdk.KVStoreKey
 	//keySlashing *sdk.KVStoreKey
+	keySideBlock *sdk.KVStoreKey
 
 	// Manage getting and setting accounts
 	accountMapper       auth.AccountMapper
@@ -45,6 +44,7 @@ type maticApp struct {
 	// removing staking for now
 	//stakeKeeper         stake.Keeper
 	//slashingKeeper      slashing.Keeper
+	sideBlockKeeper		sideBlock.Keeper
 }
 
 func NewmaticApp(logger log.Logger, db dbm.DB) *maticApp {
@@ -59,8 +59,10 @@ func NewmaticApp(logger log.Logger, db dbm.DB) *maticApp {
 		keyMain:     sdk.NewKVStoreKey("main"),
 		keyAccount:  sdk.NewKVStoreKey("acc"),
 		keyIBC:      sdk.NewKVStoreKey("ibc"),
+		keySideBlock:sdk.NewKVStoreKey("sideBlock"),
 		//keyStake:    sdk.NewKVStoreKey("stake"),
 		//keySlashing: sdk.NewKVStoreKey("slashing"),
+
 	}
 
 	// Define the accountMapper.
@@ -75,37 +77,27 @@ func NewmaticApp(logger log.Logger, db dbm.DB) *maticApp {
 	app.ibcMapper = ibc.NewMapper(app.cdc, app.keyIBC, app.RegisterCodespace(ibc.DefaultCodespace))
 	//app.stakeKeeper = stake.NewKeeper(app.cdc, app.keyStake, app.coinKeeper, app.RegisterCodespace(stake.DefaultCodespace))
 	//app.slashingKeeper = slashing.NewKeeper(app.cdc, app.keySlashing, app.stakeKeeper, app.RegisterCodespace(slashing.DefaultCodespace))
-
+	app.sideBlockKeeper = sideBlock.NewKeeper(app.cdc,app.keySideBlock,app.RegisterCodespace(sideBlock.DefaultCodespace))
 	// register message routes
 	app.Router().
 		AddRoute("auth", auth.NewHandler(app.accountMapper)).
 		AddRoute("bank", bank.NewHandler(app.coinKeeper)).
-		AddRoute("ibc", ibc.NewHandler(app.ibcMapper, app.coinKeeper))
+		AddRoute("ibc", ibc.NewHandler(app.ibcMapper, app.coinKeeper)).
 		//AddRoute("stake", stake.NewHandler(app.stakeKeeper))
+		AddRoute("sideBlock",sideBlock.NewHandler(app.sideBlockKeeper))
 
 	// Initialize BaseApp.
 	app.SetInitChainer(app.initChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 	app.SetEndBlocker(app.EndBlocker)
 	app.SetAnteHandler(auth.NewAnteHandler(app.accountMapper, app.feeCollectionKeeper))
-	//app.MountStoresIAVL(app.keyMain, app.keyAccount, app.keyIBC, app.keyStake, app.keySlashing)
+	app.MountStoresIAVL(app.keyMain, app.keyAccount, app.keyIBC, app.keySideBlock)
 	err := app.LoadLatestVersion(app.keyMain)
 	if err != nil {
 		cmn.Exit(err.Error())
 	}
 	return app
 }
-//
-//type MsgSideBlock struct {
-//	Issuer   sdk.Address
-//	Receiver sdk.Address
-//	Coin     sdk.Coin
-//}
-//
-//// Implements Msg.
-//func (msg MsgSideBlock) Type() string { return "SideBlock" }
-
-
 
 
 // Custom tx codec
@@ -114,12 +106,14 @@ func MakeCodec() *wire.Codec {
 	wire.RegisterCrypto(cdc) // Register crypto.
 	sdk.RegisterWire(cdc)    // Register Msgs
 	bank.RegisterWire(cdc)
-	stake.RegisterWire(cdc)
-	slashing.RegisterWire(cdc)
+	//stake.RegisterWire(cdc)
+	//slashing.RegisterWire(cdc)
+	sideBlock.RegisterWire(cdc)
 	ibc.RegisterWire(cdc)
 
 	// register custom AppAccount
 	cdc.RegisterInterface((*auth.Account)(nil), nil)
+	//TODO Change this to respective matic form 
 	cdc.RegisterConcrete(&types.AppAccount{}, "basecoin/Account", nil)
 	return cdc
 }
